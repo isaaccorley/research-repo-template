@@ -14,10 +14,10 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install uv and setup the python version
-        uses: astral-sh/setup-uv@v7.1
+        uses: astral-sh/setup-uv@v8.0.0
 
       - name: Install the project
         run: uv sync --all-groups
