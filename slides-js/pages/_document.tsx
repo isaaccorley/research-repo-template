@@ -1,16 +1,11 @@
 import { Head, Html, Main, NextScript } from 'next/document';
 
-/**
- * The base path for GitHub Pages deployment.
- * Set via PAGES_BASE_PATH env var in CI; empty string for local dev.
- */
 const basePath = process.env.PAGES_BASE_PATH || '';
 
 export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        {/* Preload font files for performance */}
         <link
           rel="preload"
           href={`${basePath}/fonts/SpaceGrotesk-Regular.woff2`}
@@ -32,13 +27,9 @@ export default function Document() {
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        <meta name="theme-color" content="#141414" />
+        <link rel="icon" type="image/svg+xml" href={`${basePath}/favicon.svg`} />
+        <meta name="theme-color" content="#1a0f0e" />
 
-        {/*
-          Font-face declarations are inlined here (rather than in globals.css)
-          so they can reference the basePath for GitHub Pages deployment.
-          Without this, absolute /fonts/ URLs would break under a subpath.
-        */}
         <style
           // biome-ignore lint/security/noDangerouslySetInnerHtml: static font-face declarations with basePath interpolation
           dangerouslySetInnerHTML={{

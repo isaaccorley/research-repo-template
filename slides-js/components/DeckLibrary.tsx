@@ -1,45 +1,29 @@
 /** @jsxImportSource theme-ui */
 import Link from 'next/link';
-import { colors } from '../theme/colors';
+import { useColorMode } from 'theme-ui';
 import { Logo } from './Logo';
 
 // ---------------------------------------------------------------------------
 // Deck manifest — add new entries here when creating new decks
 // ---------------------------------------------------------------------------
 
-/**
- * Metadata for a single deck in the library.
- * Each entry corresponds to an MDX file under pages/decks/.
- */
 export interface DeckEntry {
-  /** URL slug — must match the filename under pages/decks/ (without extension) */
   slug: string;
-  /** Display title shown on the card */
   title: string;
-  /** Short description of the deck's content */
   description: string;
-  /** Author or team name */
   author: string;
-  /** Date string (e.g. "March 2026") */
   date: string;
-  /** Tags for categorisation */
   tags: string[];
 }
 
-/**
- * Registry of all available decks.
- * Add new entries to this array when creating new presentations.
- * Order determines display order on the library page.
- */
 export const deckManifest: DeckEntry[] = [
   {
     slug: 'introducing-research-decks',
-    title: 'Introducing Research Decks',
-    description:
-      'An overview of the Research Decks system — how slides work, available components, keyboard shortcuts, and how to get started.',
-    author: 'Isaac Corley',
-    date: 'March 2026',
-    tags: ['internal', 'tutorial'],
+    title: 'Slide Template',
+    description: 'A branded slide deck template for Taylor Geospatial presentations.',
+    author: 'Taylor Geospatial',
+    date: 'April 2026',
+    tags: ['template'],
   },
 ];
 
@@ -48,6 +32,12 @@ export const deckManifest: DeckEntry[] = [
 // ---------------------------------------------------------------------------
 
 function DeckCard({ deck }: { deck: DeckEntry }) {
+  const [colorMode] = useColorMode();
+  const gradient =
+    colorMode === 'light'
+      ? 'linear-gradient(261deg, #e0401f 0%, #5a7ab8 100%)'
+      : 'linear-gradient(261deg, #ff4f2c 0%, #80a0d8 100%)';
+
   return (
     <Link
       href={`/decks/${deck.slug}`}
@@ -67,10 +57,10 @@ function DeckCard({ deck }: { deck: DeckEntry }) {
         '&:hover, &:focus-visible': {
           borderColor: 'accent',
           transform: 'translateY(-2px)',
-          boxShadow: `0 8px 24px ${colors.primary}26`,
+          boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
         },
         '&:focus-visible': {
-          outline: `2px solid ${colors.accent}`,
+          outline: '2px solid var(--theme-ui-colors-accent)',
           outlineOffset: '2px',
         },
         '&::before': {
@@ -80,7 +70,7 @@ function DeckCard({ deck }: { deck: DeckEntry }) {
           left: 0,
           right: 0,
           height: '3px',
-          background: colors.gradient,
+          background: gradient,
           opacity: 0,
           transition: 'opacity 0.2s ease',
         },
@@ -89,7 +79,6 @@ function DeckCard({ deck }: { deck: DeckEntry }) {
         },
       }}
     >
-      {/* Title */}
       <h3
         sx={{
           fontFamily: 'heading',
@@ -103,7 +92,6 @@ function DeckCard({ deck }: { deck: DeckEntry }) {
         {deck.title}
       </h3>
 
-      {/* Description */}
       <p
         sx={{
           fontSize: 2,
@@ -117,7 +105,6 @@ function DeckCard({ deck }: { deck: DeckEntry }) {
         {deck.description}
       </p>
 
-      {/* Tags */}
       <div sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 4 }}>
         {deck.tags.map((tag) => (
           <span
@@ -139,7 +126,6 @@ function DeckCard({ deck }: { deck: DeckEntry }) {
         ))}
       </div>
 
-      {/* Footer meta */}
       <div
         sx={{
           display: 'flex',
@@ -162,11 +148,13 @@ function DeckCard({ deck }: { deck: DeckEntry }) {
 // DeckLibrary component
 // ---------------------------------------------------------------------------
 
-/**
- * Library splash page that displays all available decks as a card grid.
- * Serves as the main entry point for the research-decks application.
- */
 export function DeckLibrary() {
+  const [colorMode] = useColorMode();
+  const gradient =
+    colorMode === 'light'
+      ? 'linear-gradient(261deg, #e0401f 0%, #5a7ab8 100%)'
+      : 'linear-gradient(261deg, #ff4f2c 0%, #80a0d8 100%)';
+
   return (
     <div
       sx={{
@@ -176,7 +164,6 @@ export function DeckLibrary() {
         flexDirection: 'column',
       }}
     >
-      {/* Header */}
       <header
         sx={{
           px: [5, 6, 7],
@@ -194,13 +181,13 @@ export function DeckLibrary() {
             lineHeight: 'tight',
             m: 0,
             mt: 5,
-            background: colors.gradient,
+            background: gradient,
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
           }}
         >
-          Deck Library
+          Slide Decks
         </h1>
 
         <p
@@ -214,12 +201,11 @@ export function DeckLibrary() {
             lineHeight: 'normal',
           }}
         >
-          Presentation slides as code — version controlled, on-brand, and developer-friendly. Browse
-          available decks or create a new one.
+          Taylor Geospatial presentation decks — version controlled, on-brand, and
+          developer-friendly.
         </p>
       </header>
 
-      {/* Deck grid */}
       <main
         sx={{
           px: [5, 6, 7],
@@ -246,7 +232,6 @@ export function DeckLibrary() {
           ))}
         </ul>
 
-        {/* Empty state hint for when there's only one deck */}
         {deckManifest.length <= 1 && (
           <p
             sx={{
@@ -277,7 +262,6 @@ export function DeckLibrary() {
         )}
       </main>
 
-      {/* Footer */}
       <footer
         sx={{
           px: [5, 6, 7],
@@ -293,7 +277,7 @@ export function DeckLibrary() {
           textTransform: 'uppercase',
         }}
       >
-        <span>Research Decks</span>
+        <span>Taylor Geospatial</span>
         <span>
           {deckManifest.length} {deckManifest.length === 1 ? 'deck' : 'decks'} available
         </span>

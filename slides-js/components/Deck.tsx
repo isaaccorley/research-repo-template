@@ -1,5 +1,6 @@
 /** @jsxImportSource theme-ui */
 import { type ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useColorMode } from 'theme-ui';
 import { Slide } from './Slide';
 import { SlideNav } from './SlideNav';
 
@@ -21,9 +22,10 @@ const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffec
 export interface DeckProps {
   /** The MDX-rendered children (the <Component> from _app.tsx). */
   children: ReactNode;
-  /** Presentation title shown in the SlideNav footer. */
-  title?: string;
 }
+
+/** Slide types that hide the navigation chrome */
+const CHROME_HIDDEN_TYPES = new Set(['title', 'section']);
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -130,13 +132,16 @@ function showAllSlides(container: HTMLElement): void {
  * Because the React tree renders intact (not cloned), all event handlers,
  * theme-ui `sx` styling, and component state work correctly.
  */
-export function Deck({ children, title }: DeckProps) {
+export function Deck({ children }: DeckProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [printMode, setPrintMode] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
   const [totalSlides, setTotalSlides] = useState(1);
+  const [slideType, setSlideType] = useState<string | null>(null);
+  const [colorMode, setColorMode] = useColorMode();
 
   const contentRef = useRef<HTMLDivElement>(null);
+  const transitionRef = useRef<HTMLDivElement>(null);
 
   // Navigate to a specific slide and update the URL hash
   const goToSlide = useCallback((index: number) => {
@@ -175,8 +180,41 @@ export function Deck({ children, title }: DeckProps) {
       showAllSlides(container);
     } else {
       showSlide(container, currentSlide);
+
+      // Trigger slide transition animation
+      if (transitionRef.current && !printMode) {
+        transitionRef.current.classList.remove('slide-transition');
+        // Force reflow to restart animation
+        void transitionRef.current.offsetHeight;
+        transitionRef.current.classList.add('slide-transition');
+      }
     }
   }, [currentSlide, printMode, children]);
+
+  // -----------------------------------------------------------------------
+  // Detect current slide type (title, section, or null for content)
+  // -----------------------------------------------------------------------
+  useIsomorphicLayoutEffect(() => {
+    const container = contentRef.current;
+    if (!container) return;
+
+    let detected: string | null = null;
+    const children = container.children;
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i] as HTMLElement;
+      if (child.getAttribute('data-slide') !== String(currentSlide)) continue;
+      const typeEl = child.querySelector('[data-slide-type]');
+      if (typeEl) {
+        detected = typeEl.getAttribute('data-slide-type');
+        break;
+      }
+      if (child.hasAttribute('data-slide-type')) {
+        detected = child.getAttribute('data-slide-type');
+        break;
+      }
+    }
+    setSlideType(detected);
+  }, [currentSlide, children]);
 
   // -----------------------------------------------------------------------
   // Hash-based slide navigation
@@ -204,6 +242,51 @@ export function Deck({ children, title }: DeckProps) {
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, [totalSlides]);
+
+  // -----------------------------------------------------------------------
+  // Touch navigation (swipe + tap zones)
+  // -----------------------------------------------------------------------
+  useEffect(() => {
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+
+      // Swipe: require horizontal movement > 40px and dominant over vertical
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+        if (dx < 0) {
+          goToSlide(Math.min(currentSlide + 1, totalSlides - 1));
+        } else {
+          goToSlide(Math.max(currentSlide - 1, 0));
+        }
+        return;
+      }
+
+      // Tap: small movement — use left/right half as prev/next zones
+      if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+        const x = e.changedTouches[0].clientX;
+        if (x > window.innerWidth / 2) {
+          goToSlide(Math.min(currentSlide + 1, totalSlides - 1));
+        } else {
+          goToSlide(Math.max(currentSlide - 1, 0));
+        }
+      }
+    };
+
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [currentSlide, totalSlides, goToSlide]);
 
   // -----------------------------------------------------------------------
   // Keyboard navigation
@@ -237,12 +320,17 @@ export function Deck({ children, title }: DeckProps) {
           e.preventDefault();
           toggleFullscreen();
           break;
+        case 't':
+        case 'T':
+          e.preventDefault();
+          setColorMode(colorMode === 'light' ? 'dark' : 'light');
+          break;
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentSlide, totalSlides, goToSlide]);
+  }, [currentSlide, totalSlides, goToSlide, colorMode, setColorMode]);
 
   // -----------------------------------------------------------------------
   // Render
@@ -286,13 +374,20 @@ export function Deck({ children, title }: DeckProps) {
         height: '100vh',
         overflow: 'hidden',
         bg: 'background',
+        color: 'text',
       }}
     >
       <Slide index={currentSlide} total={totalSlides} showNotes={showNotes}>
-        <div ref={contentRef}>{children}</div>
+        <div ref={transitionRef} sx={{ width: '100%' }}>
+          <div ref={contentRef} sx={{ width: '100%' }}>{children}</div>
+        </div>
       </Slide>
 
-      <SlideNav title={title} current={currentSlide + 1} total={totalSlides} />
+      <SlideNav
+        current={currentSlide + 1}
+        total={totalSlides}
+        hidden={CHROME_HIDDEN_TYPES.has(slideType ?? '')}
+      />
     </div>
   );
 }

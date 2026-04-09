@@ -1,88 +1,74 @@
 export const meta = {
-  title: 'Introducing Research Decks',
+  title: 'Taylor Geospatial — Slide Template',
 }
 
 <TitleSlide
-  title="Research Decks"
-  subtitle="Presentation slides as code"
+  title="Presentation Title"
+  subtitle="Subtitle or event name goes here"
   author="Isaac Corley"
-  date="March 2026"
+  date="April 2026"
 />
 
 ---
 
-# Why Research Decks?
+<Columns cols={2} gap={5} align="center">
+<div style={{ display: 'flex', justifyContent: 'flex-end' }}>
 
-A slide system that is:
+<img
+  src="/images/headshot.webp"
+  alt="Isaac Corley"
+  style={{ width: 280, height: 320, borderRadius: 8, objectFit: 'cover', objectPosition: 'center top' }}
+/>
 
-- **Version controlled** — slides live in Git, reviews via PRs
-- **On-brand** — purple/blue dark theme, custom fonts, and gradients baked in
-- **Developer-friendly** — write Markdown, drop in React components
-- **Self-contained** — no Google Slides, no Figma exports, no context switching
+</div>
+<div>
 
-> Write once, present anywhere. Export to PDF with `?print=true`.
+## Isaac Corley
+
+**Director of AI/ML Research** — Taylor Geospatial
+
+- Core maintainer of TorchGeo & SMP
+- Ph.D. Electrical Engineering — ML, CV, remote sensing
+
+</div>
+</Columns>
+
+---
+
+# Agenda
+
+- **Topic One** — Brief description of the first section
+- **Topic Two** — Brief description of the second section
+- **Topic Three** — Brief description of the third section
+- **Summary & Next Steps**
 
 <SpeakerNotes>
-Research Decks was born from the need to stop copy-pasting code screenshots into Google Slides.
-Now code is live-rendered with syntax highlighting and diagrams stay in sync with the codebase.
+Use this slide to set expectations for the audience.
+Keep the agenda to 3-5 items max.
 </SpeakerNotes>
 
 ---
 
-# How It Works
+<SectionSlide backgroundImage="/images/landsat-brown-1.jpg" kicker="Section 01">
 
-Each deck is a single **MDX file** — Markdown + JSX:
-
-```markdown
-# My Slide Title
-
-- Bullet points in **Markdown**
-- Inline `code` works too
-
----
-
-<SectionSlide>
-
-## A Big Statement
+## Topic One
 
 </SectionSlide>
-```
-
-Separate slides with `---`. That's it.
-
-<SpeakerNotes>
-MDX files live in the pages/ directory. Next.js handles routing automatically.
-The Deck component splits content on horizontal rules to create individual slides.
-</SpeakerNotes>
 
 ---
 
-# Live Code Blocks
+# Content Slide
 
-Syntax highlighting with the custom color palette:
+This is a standard content slide with body text and bullet points.
 
-```python
-import torch
-import torch.nn as nn
+- First point with supporting detail
+- Second point with supporting detail
+- Third point with supporting detail
 
-class ResidualBlock(nn.Module):
-    def __init__(self, channels: int):
-        super().__init__()
-        self.conv1 = nn.Conv2d(channels, channels, 3, padding=1)
-        self.bn1 = nn.BatchNorm2d(channels)
-        self.conv2 = nn.Conv2d(channels, channels, 3, padding=1)
-        self.bn2 = nn.BatchNorm2d(channels)
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        residual = x
-        out = torch.relu(self.bn1(self.conv1(x)))
-        out = self.bn2(self.conv2(out))
-        return torch.relu(out + residual)
-```
+> Blockquotes work well for callouts or key takeaways.
 
 <SpeakerNotes>
-Code blocks use shiki with a custom theme. Python, SQL, TypeScript, and more are supported out of the box.
-No screenshots needed — the code is always up to date.
+Add speaker notes here — toggle visibility with the N key.
 </SpeakerNotes>
 
 ---
@@ -90,79 +76,79 @@ No screenshots needed — the code is always up to date.
 <Columns cols={2}>
 <div>
 
-## Built-in Components
+## Left Column
 
-Every deck has access to:
+Content on the left side of a two-column layout.
 
-- **TitleSlide** — cover page with logo and gradient title
-- **SectionSlide** — big centered divider text
-- **Columns** — 2 or 3 column grid layouts
-- **CodeBlock** — syntax-highlighted code fences
-- **Embed** — full-viewport iframes for live demos
-- **Diagram** — SVG diagrams with theme-aware colors
-- **SpeakerNotes** — hidden notes, toggle with **N**
+- Bullet points
+- Work here too
+- As expected
 
 </div>
 <div>
 
-## Keyboard Shortcuts
+## Right Column
 
-| Key | Action |
-|-----|--------|
-| `→` `↓` `Space` | Next slide |
-| `←` `↑` | Previous slide |
-| `N` | Toggle speaker notes |
-| `F` | Toggle fullscreen |
+Content on the right side.
 
-### URL Params
-
-- `?print=true` — render all slides for PDF export
-- `?notes=true` — show speaker notes
-- `#3` — jump to slide 3
+| Key | Value |
+|-----|-------|
+| Metric A | 1,234 |
+| Metric B | 5,678 |
+| Metric C | 9,012 |
 
 </div>
 </Columns>
 
+---
+
+# Code Example
+
+```python
+import rasterio
+import numpy as np
+
+def load_tile(path: str, bands: list[int]) -> np.ndarray:
+    """Load specific bands from a raster tile."""
+    with rasterio.open(path) as src:
+        data = src.read(bands)
+    return data.astype(np.float32)
+
+tiles = [load_tile(f"scene_{i}.tif", [4, 3, 2]) for i in range(10)]
+mosaic = np.concatenate(tiles, axis=0)
+```
+
 <SpeakerNotes>
-This slide demonstrates the Columns component — two columns of content side by side.
+Code blocks use shiki with a custom TG-branded syntax theme.
+Python, SQL, TypeScript, and more are supported out of the box.
 </SpeakerNotes>
 
 ---
 
-<SectionSlide>
+<SectionSlide backgroundImage="/images/landsat-brown-3.jpg" kicker="Section 02">
 
-## Start Building
+## Key Takeaways
 
 </SectionSlide>
 
 ---
 
-# Getting Started
+# Summary & Next Steps
 
-```bash
-# Install dependencies
-bun install
+1. **Takeaway one** — what the audience should remember
+2. **Takeaway two** — what the audience should remember
+3. **Takeaway three** — what the audience should remember
 
-# Start the dev server
-bun run dev
+### Next Steps
 
-# Edit pages/decks/*.mdx — your deck auto-reloads
-```
-
-Create a **branch per deck**. Open a PR for review.
-
-Export a static site with `bun run export` — deploy anywhere.
-
-<SpeakerNotes>
-Each presentation lives on its own branch. The main branch stays as the template.
-Static export means you can host on S3, GitHub Pages, Vercel, or just open the HTML files.
-</SpeakerNotes>
+- Action item with owner and deadline
+- Action item with owner and deadline
 
 ---
 
 <TitleSlide
-  title="Let's Ship Decks"
-  subtitle="isaaccorley/research-repo-template"
+  title="Thank You"
+  subtitle="Questions?"
   author="Isaac Corley"
-  date="March 2026"
+  date="April 2026"
 />

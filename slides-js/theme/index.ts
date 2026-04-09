@@ -1,8 +1,13 @@
 import type { Theme } from 'theme-ui';
-import { colors } from './colors';
+import { colors, lightColors } from './colors';
 import { fontSizes, fontWeights, fonts, lineHeights } from './fonts';
 
 const theme: Theme = {
+  config: {
+    initialColorModeName: 'dark',
+    useColorSchemeMediaQuery: false,
+  },
+
   // --- Design Tokens ---
   colors: {
     text: colors.text,
@@ -23,6 +28,23 @@ const theme: Theme = {
     success: colors.success,
     warning: colors.warning,
     error: colors.error,
+
+    modes: {
+      light: {
+        text: lightColors.text,
+        background: lightColors.background,
+        primary: lightColors.primary,
+        secondary: lightColors.textSecondary,
+        muted: lightColors.surface,
+        highlight: lightColors.highlight,
+        surface: lightColors.surface,
+        surfaceLight: lightColors.surfaceLight,
+        border: lightColors.border,
+        subtle: lightColors.subtle,
+        textSecondary: lightColors.textSecondary,
+        textMuted: lightColors.textMuted,
+      },
+    },
   },
 
   fonts: {
@@ -50,14 +72,14 @@ const theme: Theme = {
     full: 9999,
   },
 
+  // Use CSS vars so borders respond to color mode changes
   borders: {
-    thin: `1px solid ${colors.border}`,
-    thick: `2px solid ${colors.border}`,
-    accent: `2px solid ${colors.accent}`,
+    thin: '1px solid var(--theme-ui-colors-border)',
+    thick: '2px solid var(--theme-ui-colors-border)',
+    accent: '2px solid var(--theme-ui-colors-accent)',
   },
 
   // --- Base HTML Element Styles ---
-  // These apply to raw HTML elements rendered from MDX
   styles: {
     root: {
       fontFamily: 'body',
@@ -71,18 +93,20 @@ const theme: Theme = {
     h1: {
       fontFamily: 'heading',
       fontWeight: 'heading',
-      fontSize: 7,
+      fontSize: [7, 8],
       lineHeight: 'tight',
       mt: 0,
       mb: 4,
+      letterSpacing: '-0.02em',
     },
     h2: {
       fontFamily: 'heading',
       fontWeight: 'heading',
-      fontSize: 6,
+      fontSize: [6, 7],
       lineHeight: 'tight',
       mt: 0,
       mb: 3,
+      letterSpacing: '-0.01em',
     },
     h3: {
       fontFamily: 'heading',
@@ -101,7 +125,7 @@ const theme: Theme = {
       mb: 2,
     },
     p: {
-      fontSize: 3,
+      fontSize: 6,
       lineHeight: 'normal',
       mt: 0,
       mb: 3,
@@ -114,30 +138,66 @@ const theme: Theme = {
       },
     },
     ul: {
-      fontSize: 3,
+      fontSize: 6,
       lineHeight: 'relaxed',
       pl: 5,
       mt: 0,
       mb: 3,
+      listStyleType: 'none',
+      '& > li': {
+        position: 'relative',
+        pl: 4,
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          left: 0,
+          top: '0.65em',
+          width: '6px',
+          height: '1.5px',
+          bg: 'textMuted',
+          borderRadius: 'full',
+        },
+      },
     },
     ol: {
-      fontSize: 3,
+      fontSize: 6,
       lineHeight: 'relaxed',
       pl: 5,
       mt: 0,
       mb: 3,
+      counterReset: 'ol-counter',
+      listStyleType: 'none',
+      '& > li': {
+        position: 'relative',
+        pl: 5,
+        counterIncrement: 'ol-counter',
+        '&::before': {
+          content: 'counter(ol-counter) "."',
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          fontFamily: 'monospace',
+          fontSize: '0.85em',
+          fontWeight: 'medium',
+          color: 'textMuted',
+        },
+      },
     },
     li: {
-      mb: 1,
+      mb: 2,
     },
     blockquote: {
-      borderLeft: 'accent',
+      borderLeft: '3px solid var(--theme-ui-colors-accent)',
       pl: 4,
+      py: 3,
       ml: 0,
+      my: 4,
+      bg: 'surface',
+      borderRadius: 'sm',
       color: 'textSecondary',
       fontStyle: 'italic',
+      '& p': { m: 0 },
     },
-    // Inline code uses these styles:
     code: {
       fontFamily: 'monospace',
       fontSize: '0.9em',
@@ -149,8 +209,8 @@ const theme: Theme = {
     },
     pre: {
       fontFamily: 'monospace',
-      fontSize: 1,
-      lineHeight: 'normal',
+      fontSize: 3,
+      lineHeight: 'relaxed',
       bg: 'surface',
       color: 'text',
       p: 4,
@@ -159,8 +219,6 @@ const theme: Theme = {
       overflow: 'auto',
     },
     hr: {
-      // The <hr> element is used as slide separator.
-      // It should be invisible — the Deck component uses it as a split marker.
       display: 'none',
     },
     img: {
@@ -168,20 +226,28 @@ const theme: Theme = {
       height: 'auto',
     },
     table: {
-      width: '100%',
       borderCollapse: 'collapse',
-      fontSize: 2,
+      fontSize: 3,
       mb: 3,
+      borderRadius: 'md',
+      overflow: 'hidden',
     },
     th: {
-      borderBottom: 'thick',
-      p: 2,
+      borderBottom: '2px solid var(--theme-ui-colors-border)',
+      p: 3,
       textAlign: 'left',
-      fontWeight: 'medium',
+      fontWeight: 'bold',
+      fontSize: 2,
+      color: 'text',
     },
     td: {
       borderBottom: 'thin',
-      p: 2,
+      p: 3,
+    },
+    tr: {
+      '&:nth-of-type(even)': {
+        bg: 'surface',
+      },
     },
   },
 };

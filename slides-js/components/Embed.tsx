@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 export interface EmbedProps {
   /** URL to embed in the iframe */
   src: string;
@@ -21,22 +19,24 @@ export interface EmbedProps {
 export function Embed({ src, title = 'Embedded content', clip = false }: EmbedProps) {
   return (
     <div
-      sx={{
-        position: 'absolute',
+      style={{
+        position: 'fixed',
         top: 0,
         left: 0,
         width: '100vw',
         height: clip ? 'calc(100vh - 48px)' : '100vh',
+        zIndex: 999,
         overflow: 'hidden',
       }}
     >
       <iframe
         src={src}
         title={title}
-        sx={{
+        style={{
           width: '100%',
           height: '100%',
           border: 'none',
+          display: 'block',
         }}
         sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
         loading="lazy"

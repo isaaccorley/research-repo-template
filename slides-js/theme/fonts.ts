@@ -9,15 +9,15 @@ export const fonts = {
 } as const;
 
 export const fontSizes = [
-  '0.75rem', // 0: 12px (caption)
-  '0.875rem', // 1: 14px (small)
-  '1rem', // 2: 16px (body)
-  '1.25rem', // 3: 20px (large body)
-  '1.5rem', // 4: 24px (h4)
-  '2rem', // 5: 32px (h3)
-  '2.5rem', // 6: 40px (h2)
-  '3.5rem', // 7: 56px (h1)
-  '5rem', // 8: 80px (display)
+  '0.875rem', // 0: 14px (caption)
+  '1rem', // 1: 16px (small / code)
+  '1.25rem', // 2: 20px (body)
+  '1.5rem', // 3: 24px (large body / bullets)
+  '1.75rem', // 4: 28px (h4)
+  '2.25rem', // 5: 36px (h3)
+  '3rem', // 6: 48px (h2)
+  '4rem', // 7: 64px (h1)
+  '5.5rem', // 8: 88px (display)
 ] as const;
 
 export const fontWeights = {

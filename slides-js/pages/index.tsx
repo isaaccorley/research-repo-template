@@ -1,22 +1,32 @@
 /** @jsxImportSource theme-ui */
-import Head from 'next/head';
-import { DeckLibrary } from '../components/DeckLibrary';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 /**
- * Library splash page — the main entry point for Research Decks.
- * Displays a grid of available deck presentations that users can browse and open.
+ * Index page — redirects to the single slide deck.
+ * When more decks are added, this can be swapped back to the DeckLibrary.
  */
-export default function LibraryPage() {
+export default function IndexPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/presentation');
+  }, [router]);
+
   return (
-    <>
-      <Head>
-        <title>Research Decks — Library</title>
-        <meta
-          name="description"
-          content="Browse research presentation decks — version controlled, on-brand, and developer-friendly."
-        />
-      </Head>
-      <DeckLibrary />
-    </>
+    <div
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+        bg: 'background',
+        color: 'textMuted',
+        fontFamily: 'body',
+        fontSize: 2,
+      }}
+    >
+      Loading...
+    </div>
   );
 }

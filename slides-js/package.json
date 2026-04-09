@@ -1,8 +1,8 @@
 {
-  "name": "research-decks",
+  "name": "tg-slides-template",
   "version": "0.1.0",
   "private": true,
-  "description": "Research presentation deck template",
+  "description": "Taylor Geospatial presentation slide deck template",
   "engines": {
     "node": ">=20"
   },
@@ -29,6 +29,7 @@
     "@mdx-js/loader": "3.1.1",
     "@mdx-js/react": "3.1.0",
     "@next/mdx": "15.3.9",
+    "@playwright/test": "^1.59.1",
     "@types/mdx": "2.0.13",
     "@types/node": "22.15.0",
     "@types/react": "18.3.18",

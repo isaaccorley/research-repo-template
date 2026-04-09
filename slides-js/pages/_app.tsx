@@ -19,20 +19,13 @@ import '../styles/globals.css';
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
-  // MDX files can export: export const meta = { title: '...' }
-  // @next/mdx makes these available on the component
-  // biome-ignore lint/suspicious/noExplicitAny: MDX meta export has no typed interface from @next/mdx
-  const meta = (Component as any).meta ?? {};
-
-  // Only wrap pages under /decks/ with the slide Deck engine.
-  // Match both /decks/slug and exactly /decks to avoid false positives
-  // like a hypothetical /decks-archive page.
-  const isDeckPage = router.pathname === '/decks' || router.pathname.startsWith('/decks/');
+  // Wrap the presentation page with the slide Deck engine.
+  const isDeckPage = router.pathname === '/presentation';
 
   if (isDeckPage) {
     return (
       <ThemeUIProvider theme={theme}>
-        <Deck title={meta.title}>
+        <Deck>
           <Component {...pageProps} />
         </Deck>
       </ThemeUIProvider>
