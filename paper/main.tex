@@ -1,44 +1,68 @@
 \documentclass{article}
 
-% NeurIPS 2025 style
-% Options: main, position, dandb, creativeai, sglblindworkshop, dblblindworkshop
-% Add "final" after track for camera-ready: e.g. [main, final]
-% Add "preprint" for arXiv: [preprint]
-\usepackage{neurips_2025}
-
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{hyperref}
-\usepackage{url}
-\usepackage{booktabs}
-\usepackage{amsfonts}
-\usepackage{amsmath}
-\usepackage{nicefrac}
 \usepackage{microtype}
-\usepackage{xcolor}
 \usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{booktabs}
 
-\title{Paper Title}
+\usepackage{hyperref}
 
-\author{%
-  Author Name \\
-  Department \\
-  Institution \\
-  \texttt{email@example.com} \\
-}
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Use for initial blind submission; switch to [accepted] for camera-ready.
+\usepackage{icml2026}
+% \usepackage[accepted]{icml2026}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+
+\usepackage[capitalize,noabbrev]{cleveref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\icmltitlerunning{Paper Title}
 
 \begin{document}
 
-\maketitle
+\twocolumn[
+\icmltitle{Paper Title}
+
+\icmlsetsymbol{equal}{*}
+
+\begin{icmlauthorlist}
+\icmlauthor{Author Name}{yyy}
+\end{icmlauthorlist}
+
+\icmlaffiliation{yyy}{Department, Institution, City, Country}
+
+\icmlcorrespondingauthor{Author Name}{email@example.com}
+
+\icmlkeywords{Machine Learning, ICML}
+
+\vskip 0.3in
+]
+
+\printAffiliationsAndNotice{}  % use \icmlEqualContribution if needed
 
 \begin{abstract}
-  Abstract goes here.
+Abstract goes here.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:intro}
 
-\section{Related work}
+\section{Related Work}
 \label{sec:related}
 
 \section{Method}
@@ -50,14 +74,18 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-\begin{ack}
-  Acknowledgments go here (omit for anonymous submission).
-\end{ack}
+\section*{Impact Statement}
 
-\bibliographystyle{plainnat}
+This paper presents work whose goal is to advance the field of Machine Learning.
+There are many potential societal consequences of our work, none which we feel
+must be specifically highlighted here.
+
 \bibliography{references}
+\bibliographystyle{icml2026}
 
+\newpage
 \appendix
+\onecolumn
 
 \section{Additional results}
 \label{app:results}

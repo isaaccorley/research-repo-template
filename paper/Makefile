@@ -6,14 +6,14 @@ BIBFILES = $(wildcard *.bib)
 
 install:
 	tlmgr update --self
-	tlmgr install latexmk collection-fontsrecommended booktabs natbib microtype hyperref environ trimspaces xcolor graphicx amsmath amsfonts units
+	tlmgr install latexmk collection-fontsrecommended booktabs natbib microtype hyperref environ trimspaces xcolor graphicx amsmath amsfonts amssymb mathtools amsthm cleveref subfigure todonotes units
 
 check:
 	tex-fmt --check $(TEXFILES)
 
 build: $(MAIN).pdf
 
-$(MAIN).pdf: $(TEXFILES) $(BIBFILES) neurips_2025.sty
+$(MAIN).pdf: $(TEXFILES) $(BIBFILES) icml2026.sty icml2026.bst fancyhdr.sty algorithm.sty algorithmic.sty
 	latexmk -pdf -interaction=nonstopmode -halt-on-error $(MAIN).tex
 
 watch:
